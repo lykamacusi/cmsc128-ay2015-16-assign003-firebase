@@ -13,20 +13,26 @@
 			<h1 class="grey-text text-lighten-5">Recipe Chef</h1>
 		</div>
 		
+		<!-- For data representation -->
 		<div class="container">
 			<div class="row">
 				<form class="col s12 m12 l12">
 					<div class="row">
+						<!-- Shows the name of the recipe -->
 						<div class="input-field col s12 m3 l3">
 							<i class="mdi-maps-restaurant-menu prefix"></i>
 							<input placeholder="Name" id="recipe_name" type="text" class="validate">
 							<label for="recipe_name">Recipe Name</label>
 						</div>
+						
+						<!-- Shows the recipe itself -->
 						<div class="input-field col s12 m6 l6">
 							<i class="mdi-content-content-paste prefix"></i>
 							<input placeholder="Recipe" id="recipe_text" type="text" class="validate">
 							<label for="recipe_text">Recipe</label>
 						</div>
+						
+						<!-- Shows the cecipe's classification -->
 						<div class="input-field col s12 m3 l3">
 							<i class="mdi-action-label-outline prefix"></i>
 							<input placeholder="e.g. Asian, French" id="recipe_classification" type="text" class="validate">
@@ -37,12 +43,15 @@
 			</div>
 		</div>
 		
+		<!-- For data input -->
 		<div class="container">
 			<div class="row">
+				<!-- Asks for name of the recipe -->
 				<div class="col s6 m2 l2 name">
 					<div class="collapsible-header" id="nameDiv"><i class="mdi-maps-restaurant-menu"></i></div>
 				</div>
 				
+				<!-- Asks for name of the recipe itself -->
 				<div class="col s12 m8 l8">
 					<div class="card blue-grey darken-1">
 						<div class="card-content white-text">
@@ -52,6 +61,7 @@
 					</div>
 				</div>
 				
+				<!-- Asks for name of the recipe's classification -->
 				<div class="col s6 m2 l2">
 					<div class="collapsible-header" id="textDiv"><i class="mdi-action-label-outline"></i></div>
 				</div>
@@ -61,28 +71,30 @@
 		<script>
 			var myDataRef = new Firebase('https://popping-heat-4393.firebaseio.com/');
 			$('document').ready(function(){
+				/* When any of the fields are entered, then the values will be pushed */
 				$('input').keypress(function (e) {
 					if (e.keyCode == 13) {
 						var name = $('#recipe_name').val();
 						var text = $('#recipe_classification').val();
 						var recipe = $('#recipe_text').val();
 						myDataRef.push({name: name, text: text, recipe: recipe});
+						/* Removes values that were previosuly inputted */
 						$('#recipe_name').val('');
 						$('#recipe_classification').val('');
 						$('#recipe_text').val('');
 					}
 				});
+				
 				myDataRef.on('child_added', function(snapshot) {
+					/* Create new object */
 					var message = snapshot.val();
 					displayChatMessage(message.name, message.text, message.recipe);
 				});
+				
 				function displayChatMessage(name, text, recipe) {
 					$('<div/>').text(name).appendTo($('#nameDiv'));
 					$('<div/>').text('Recipe for ' + name + ': '+recipe).appendTo($('#recipeDiv'));
 					$('<div/>').text(text).appendTo($('#textDiv'));
-					$('#nameDiv')[0].scrollTop = $('#nameDiv')[0].scrollHeight;
-					$('#recipeDiv')[0].scrollTop = $('#recipeDiv')[0].scrollHeight;
-					$('#textDiv')[0].scrollTop = $('#textDiv')[0].scrollHeight;
 				};	
 			});
 		</script>
